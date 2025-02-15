@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: Spring-Boot-Basic
+  datasource:
+    url: jdbc:mysql://localhost:8889/spring_jpa_db
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+      dialect: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+  # Format the SQL for better readability
+server:
+  port: 8090
+  servlet:
+    context-path: /v1
