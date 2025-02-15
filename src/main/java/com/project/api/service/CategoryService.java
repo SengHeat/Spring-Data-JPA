@@ -1,6 +1,6 @@
 package com.project.api.service;
 
-import com.project.api.exception.CategoryNameAlreadyExistsException;
+import com.project.api.exception.AlreadyExistsException;
 import com.project.api.model.entity.CategoryEntity;
 import com.project.api.model.request.CategoryRequest;
 import com.project.api.repository.CategoryRepository;
@@ -23,7 +23,7 @@ public class CategoryService {
 
         //check name from request exit or not
         if(categoryRepository.existsByName(data.getName())){
-            throw new CategoryNameAlreadyExistsException("Category name already exists!");
+            throw new AlreadyExistsException("Category name already exists!");
         }
 
         return this.categoryRepository.save(request.toCategoryEntity());

@@ -1,6 +1,7 @@
 package com.project.api.model.base;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public class ErrorResponse {
 
@@ -8,13 +9,15 @@ public class ErrorResponse {
     private int status;
     private String error;
     private String message;
+    private Map<String, String> errors;  // To hold specific field validation errors
     private String path;
 
-    public ErrorResponse(int status, String error, String message, String path) {
+    public ErrorResponse(int status, String error, String message, Map<String, String> errors, String path) {
         this.timestamp = LocalDateTime.now();
         this.status = status;
         this.error = error;
         this.message = message;
+        this.errors = errors;
         this.path = path;
     }
 
@@ -49,6 +52,14 @@ public class ErrorResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Map<String, String> getErrors() {
+        return errors;
+    }
+
+    public void setErrors(Map<String, String> errors) {
+        this.errors = errors;
     }
 
     public String getPath() {
