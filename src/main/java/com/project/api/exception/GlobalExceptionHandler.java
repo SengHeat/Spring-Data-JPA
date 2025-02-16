@@ -1,13 +1,16 @@
 package com.project.api.exception;
 
+import com.project.api.model.base.ApiResponse;
 import com.project.api.model.base.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.*;
 
@@ -76,7 +79,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
-
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleExistsException(AlreadyExistsException ex, HttpServletRequest request) {
         // Prepare the custom error response
@@ -94,6 +96,57 @@ public class GlobalExceptionHandler {
 
         // Return the response with BAD_REQUEST (400) status
         return ResponseEntity.status(409).body(response);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNotFoundException(NotFoundException ex, HttpServletRequest request) {
+        // Prepare the custom error response
+        Map<String, String> errors = new HashMap<>();
+        // You can populate errors with specific details if needed, such as field names
+
+        // Prepare the ErrorResponse object
+        ErrorResponse response = new ErrorResponse(
+                404,   // status at the top
+                "Not Found",
+                ex.getMessage(), // Dynamic message e.g., "Category name already exists!"
+                errors, // Include errors map (could be empty or specific)
+                request.getRequestURI()
+        );
+
+        // Return the response with BAD_REQUEST (400) status
+        return ResponseEntity.status(404).body(response);
+    }
+
+    @ExceptionHandler(InvalidIdFormatException.class)
+    public ResponseEntity<ApiResponse> handleInvalidFormatException(InvalidIdFormatException ex, HttpServletRequest request) {
+        String message = "Invalid input: '" + ex.getMessage() + "'. Expected type: Expected a valid numeric value.";
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse(message, HttpStatus.BAD_REQUEST.value(), null));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiResponse> handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        String message = "Invalid input: '" + ex.getValue() + "'. Expected type: " + ex.getRequiredType().getSimpleName();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse(message, HttpStatus.BAD_REQUEST.value(), null));
+    }
+
+    @ExceptionHandler(NumberFormatException.class)
+    public ResponseEntity<ApiResponse> handleNumberFormatException(NumberFormatException ex) {
+        // Create a detailed message for the error
+        String message = "Invalid input: '" + ex.getMessage() + "'. Expected a valid numeric value.";
+
+        // Return a BAD_REQUEST response with the message and status code
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ApiResponse(message, HttpStatus.BAD_REQUEST.value(), null));
+    }
+
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ApiResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        String message = "Request method '" + ex.getMethod() + "' is not supported. Supported methods: " + ex.getSupportedHttpMethods();
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(new ApiResponse(message, HttpStatus.METHOD_NOT_ALLOWED.value(), null));
     }
 
 }

@@ -1,5 +1,9 @@
 package com.project.api.model.base;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
+import java.util.HashMap;
+
+@JsonPropertyOrder({"status", "message", "data"}) // Ensures status appears first
 public class ApiResponse {
     private int status;
     private String message;
@@ -7,8 +11,8 @@ public class ApiResponse {
 
     public ApiResponse(String message, int status, Object data) {
         this.status = status;
-        this.message = message;
-        this.data = data;
+        this.message = message.isEmpty() ? (data == null) ? "Not Found" : "successfully" : message;
+        this.data = (data == null) ? new HashMap<>() : data;
     }
 
     // Getters and Setters
