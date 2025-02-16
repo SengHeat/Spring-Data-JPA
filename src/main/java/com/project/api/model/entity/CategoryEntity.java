@@ -3,6 +3,9 @@ package com.project.api.model.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+import java.util.logging.Logger;
+
 @Entity(name = "Category")
 @Table(name = "categories")
 public class CategoryEntity {
@@ -16,6 +19,8 @@ public class CategoryEntity {
 
     @Column(length = 100)
     private String description;
+
+    private static final Logger log = Logger.getLogger(CategoryEntity.class.getName());
 
 
 
@@ -41,5 +46,61 @@ public class CategoryEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryEntity category = (CategoryEntity) o;
+        return Objects.equals(id, category.id) && Objects.equals(name, category.name) && Objects.equals(description, category.description);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description);
+    }
+
+    @PrePersist
+    public void beforeSave() {
+        log.info("A new category is about to be saved: " + this.toString());
+    }
+
+    @PostPersist
+    public void afterSave() {
+        log.info("Category saved successfully: " + this.toString());
+    }
+
+    @PreUpdate
+    public void beforeUpdate() {
+        log.info("Category is about to be updated: " + this.toString());
+    }
+
+    @PostUpdate
+    public void afterUpdate() {
+        log.info("Category updated successfully: " + this.toString());
+    }
+
+    @PreRemove
+    public void beforeDelete() {
+        log.warning("Category is about to be deleted: " + this.toString());
+    }
+
+    @PostRemove
+    public void afterDelete() {
+        log.warning("Category deleted successfully: " + this.toString());
+    }
+
+    @PostLoad
+    public void afterLoad() {
+        log.info("Category entity loaded: " + this.toString());
+    }
+
+    @Override
+    public String toString() {
+        return "CategoryEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

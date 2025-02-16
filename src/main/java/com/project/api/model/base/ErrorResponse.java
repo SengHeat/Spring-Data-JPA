@@ -6,16 +6,16 @@ import java.util.Map;
 public class ErrorResponse {
 
     private LocalDateTime timestamp;
-    private int status;
-    private String error;
+    private int statusCode;
+    private String status;
     private String message;
     private Map<String, String> errors;  // To hold specific field validation errors
     private String path;
 
-    public ErrorResponse(int status, String error, String message, Map<String, String> errors, String path) {
+    public ErrorResponse(int statusCode, String status, String message, Map<String, String> errors, String path) {
         this.timestamp = LocalDateTime.now();
+        this.statusCode = statusCode;
         this.status = status;
-        this.error = error;
         this.message = message;
         this.errors = errors;
         this.path = path;
@@ -30,20 +30,20 @@ public class ErrorResponse {
         this.timestamp = timestamp;
     }
 
-    public int getStatus() {
+    public int getStatusCode() {
+        return statusCode;
+    }
+
+    public void setStatusCode(int statusCode) {
+        this.statusCode = statusCode;
+    }
+
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
-    }
-
-    public String getError() {
-        return error;
-    }
-
-    public void setError(String error) {
-        this.error = error;
     }
 
     public String getMessage() {

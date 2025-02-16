@@ -1,9 +1,10 @@
 package com.project.api.model.response;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.project.api.model.entity.CategoryEntity;
 
 import java.io.Serializable;
-
+@JsonPropertyOrder({"id", "name", "description"})
 public class CategoryResponse implements Serializable {
     private Long id;
     private String name;

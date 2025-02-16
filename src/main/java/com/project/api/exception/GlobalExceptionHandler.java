@@ -17,6 +17,7 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
         Map<String, String> errors = new HashMap<>();
@@ -59,7 +60,7 @@ public class GlobalExceptionHandler {
         errorResponse.setMessage(ex.getMessage());
 
         // Return the error response as a ResponseEntity with INTERNAL_SERVER_ERROR status
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     // Handle resource not found errors
@@ -94,7 +95,6 @@ public class GlobalExceptionHandler {
                 request.getRequestURI()
         );
 
-        // Return the response with BAD_REQUEST (400) status
         return ResponseEntity.status(409).body(response);
     }
 
@@ -132,13 +132,24 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(NumberFormatException.class)
-    public ResponseEntity<ApiResponse> handleNumberFormatException(NumberFormatException ex) {
+    public ResponseEntity<ErrorResponse> handleNumberFormatException(NumberFormatException ex, HttpServletRequest request) {
         // Create a detailed message for the error
         String message = "Invalid input: '" + ex.getMessage() + "'. Expected a valid numeric value.";
 
+        Map<String, String> errors = new HashMap<>();
+        // You can populate errors with specific details if needed, such as field names
+
+        // Prepare the ErrorResponse object
+        ErrorResponse response = new ErrorResponse(
+                400,   // status at the top
+                "Bad Request",
+                message, // Dynamic message e.g., "Category name already exists!"
+                errors, // Include errors map (could be empty or specific)
+                request.getRequestURI()
+        );
+
         // Return a BAD_REQUEST response with the message and status code
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ApiResponse(message, HttpStatus.BAD_REQUEST.value(), null));
+        return ResponseEntity.status(400).body(response);
     }
 
 

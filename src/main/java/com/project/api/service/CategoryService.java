@@ -37,31 +37,34 @@ public class CategoryService {
     }
 
     public CategoryEntity update(Long id, CategoryRequest request) throws Exception {
-            // Find the category
-            CategoryEntity findData = categoryRepository.findById(id)
-                    .orElseThrow(() -> new NotFoundException("Category with ID " + id + " not found!"));
-
-            // Check if the name already exists
-            if (categoryRepository.existsByName(request.getName())) {
-                String errorMessage = "Category name '" + request.getName() + "' already exists!";
-                throw new AlreadyExistsException(errorMessage);
-            }
-
-            // Update the category data
-            findData.setName(request.getName());
-            findData.setDescription(request.getDescription());
-        try {
-            // Save and return updated entity
-            return this.categoryRepository.save(findData);
-
+        // Find the category
+        CategoryEntity category = findOne(id);
+        // Check if the name already exists
+        if (categoryRepository.existsByName(request.getName())) {
+            throw new AlreadyExistsException("Category name already exists!");
         }
-        catch (Exception e) {
-            throw new Exception(e);
-        }
+
+        // Update the category data
+        category.setName(request.getName());
+        category.setDescription(request.getDescription());
+
+        return this.categoryRepository.save(category);
+
     }
 
-    public List<CategoryEntity> getAll() {
+    public List<CategoryEntity> findAll() {
         return this.categoryRepository.findAll();
+    }
+
+    public CategoryEntity findOne(Long id) throws NotFoundException {
+        return this.categoryRepository.findById(id).orElseThrow(() -> new
+                NotFoundException("Category with ID " + id + " not found!"));
+    }
+
+    public CategoryEntity delete(Long id) {
+        CategoryEntity category = findOne(id);
+        this.categoryRepository.deleteById(id);
+        return category;
     }
 
 }
