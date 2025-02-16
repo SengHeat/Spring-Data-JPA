@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
 
 import java.util.*;
 
@@ -158,6 +159,13 @@ public class GlobalExceptionHandler {
         String message = "Request method '" + ex.getMethod() + "' is not supported. Supported methods: " + ex.getSupportedHttpMethods();
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(new ApiResponse(message, HttpStatus.METHOD_NOT_ALLOWED.value(), null));
+    }
+
+    // Handle missing or invalid routes
+    @ExceptionHandler(NoHandlerFoundException.class)
+    public ResponseEntity<ApiResponse> handleNoHandlerFoundException(NoHandlerFoundException ex) {
+        ApiResponse response = new ApiResponse("No static resource for the path: " + ex.getRequestURL(), HttpStatus.NOT_FOUND.value(), null);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
 }

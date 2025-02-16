@@ -1,6 +1,7 @@
 package com.project.api.model.entity;
 
 
+import com.project.api.model.listener.CategoryEntityListener;
 import jakarta.persistence.*;
 
 import java.util.Objects;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 
 @Entity(name = "Category")
 @Table(name = "categories")
+@EntityListeners(CategoryEntityListener.class)
 public class CategoryEntity {
 
     @Id
@@ -58,41 +60,6 @@ public class CategoryEntity {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, description);
-    }
-
-    @PrePersist
-    public void beforeSave() {
-        log.info("A new category is about to be saved: " + this.toString());
-    }
-
-    @PostPersist
-    public void afterSave() {
-        log.info("Category saved successfully: " + this.toString());
-    }
-
-    @PreUpdate
-    public void beforeUpdate() {
-        log.info("Category is about to be updated: " + this.toString());
-    }
-
-    @PostUpdate
-    public void afterUpdate() {
-        log.info("Category updated successfully: " + this.toString());
-    }
-
-    @PreRemove
-    public void beforeDelete() {
-        log.warning("Category is about to be deleted: " + this.toString());
-    }
-
-    @PostRemove
-    public void afterDelete() {
-        log.warning("Category deleted successfully: " + this.toString());
-    }
-
-    @PostLoad
-    public void afterLoad() {
-        log.info("Category entity loaded: " + this.toString());
     }
 
     @Override
