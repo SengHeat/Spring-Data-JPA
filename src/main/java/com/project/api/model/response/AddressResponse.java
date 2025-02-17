@@ -40,11 +40,11 @@ public class AddressResponse {
         this.userId = userId;
     }
 
-    public AddressResponse fromAddressEntity(AddressEntity entity) {
+    public static AddressResponse fromAddressEntity(AddressEntity entity) {
         return new AddressResponse(
-                this.id,
+                entity.getId(),
                 entity.getAddress(),
-                entity.getId()
+                entity.getUser().getId()
         );
     }
 }

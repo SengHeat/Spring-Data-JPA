@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class AddressRequest implements Serializable {
 
     @NotBlank(message = "Address is required")
-    @Size(max = 50, message = "Address must be at most 30 characters long")
+    @Size(max = 50, message = "Address must be at most 50 characters long")
     private String address;
 
     public String getAddress() {

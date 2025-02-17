@@ -18,6 +18,23 @@ import java.util.*;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
+        // Create an ErrorResponse with the necessary details
+        ErrorResponse errorResponse = new ErrorResponse(
+                500, // status code
+                "Internal Server Error", // error type
+                ex.getMessage(), // generic message
+                new HashMap<>(), // no specific validation errors
+                request.getRequestURI() // the URI path of the request
+        );
+
+        // Add the exception message to the error response (optional)
+        errorResponse.setMessage(ex.getMessage());
+
+        // Return the error response as a ResponseEntity with INTERNAL_SERVER_ERROR status
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationErrors(MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -45,28 +62,12 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(errorResponse);
     }
 
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> handleGenericException(Exception ex, HttpServletRequest request) {
-        // Create an ErrorResponse with the necessary details
-        ErrorResponse errorResponse = new ErrorResponse(
-                500, // status code
-                "Internal Server Error", // error type
-                ex.getMessage(), // generic message
-                new HashMap<>(), // no specific validation errors
-                request.getRequestURI() // the URI path of the request
-        );
-
-        // Add the exception message to the error response (optional)
-        errorResponse.setMessage(ex.getMessage());
-
-        // Return the error response as a ResponseEntity with INTERNAL_SERVER_ERROR status
-        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(new ApiResponse(ex.getMessage(), 400, null));
     }
-
     // Handle resource not found errors
     @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseBody
     public ResponseEntity<ErrorResponse> handleResourceNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         // Create an ErrorResponse with the necessary details
         ErrorResponse errorResponse = new ErrorResponse(
@@ -152,7 +153,6 @@ public class GlobalExceptionHandler {
         // Return a BAD_REQUEST response with the message and status code
         return ResponseEntity.status(400).body(response);
     }
-
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiResponse> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {

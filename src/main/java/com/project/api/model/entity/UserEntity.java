@@ -17,7 +17,7 @@ public class UserEntity {
     @Column(nullable = false, length = 30)
     private String name;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true, mappedBy = "user")
     @JoinColumn(name = "address_id") // Ensure this column exists in your `users` table
     private AddressEntity address; // ✅ Added address reference
 
