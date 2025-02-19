@@ -109,7 +109,7 @@ public class GlobalExceptionHandler {
         // Prepare the ErrorResponse object
         ErrorResponse response = new ErrorResponse(
                 404,   // status at the top
-                "Not Found",
+                "Not Found",                                                                                                                                  
                 ex.getMessage(), // Dynamic message e.g., "Category name already exists!"
                 errors, // Include errors map (could be empty or specific)
                 request.getRequestURI()
