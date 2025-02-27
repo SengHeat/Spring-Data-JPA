@@ -36,6 +36,8 @@ public class CategoryService {
         }
     }
 
+
+
     public CategoryEntity update(Long id, CategoryRequest request) throws Exception {
         // Find the category
         CategoryEntity category = findOne(id);
@@ -55,6 +57,12 @@ public class CategoryService {
     public List<CategoryEntity> findAll() {
         return this.categoryRepository.findAll();
     }
+
+    public List<CategoryEntity> findByName(String name) {
+        return this.categoryRepository.findAll();
+//        return this.categoryRepository.findBySkillsContainingIgnoreCase(name);
+    }
+
 
     public CategoryEntity findOne(Long id) throws NotFoundException {
         return this.categoryRepository.findById(id).orElseThrow(() -> new

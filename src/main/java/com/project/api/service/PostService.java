@@ -50,15 +50,15 @@ public class PostService {
 
     public PaginatedResponse<PostResponse> findAll(Pageable pageable) {
         Page<PostEntity> page = postRepository.findAll(pageable);
-        PaginatedResponse<PostResponse> response = new PaginatedResponse<>();
-        response.setLists(page.getContent().stream().map(PostResponse::fromEntity).collect(Collectors.toList()));
-        response.setCurrentPage(page.getNumber());
-        response.setTotalPages(page.getTotalPages());
-        response.setTotalElements(page.getTotalElements());
-        response.setFirstPage(page.isFirst());
-        response.setLastPage(page.isLast());
-        response.setEmpty(page.isEmpty());
-        return response;
+        return new PaginatedResponse<>(
+                page.getContent().stream().map(PostResponse::fromEntity).collect(Collectors.toList()),
+                page.getNumber(),
+                page.getTotalPages(),
+                page.getTotalElements(),
+                page.isFirst(),
+                page.isLast(),
+                page.isEmpty()
+        );
     }
 
 
@@ -73,5 +73,10 @@ public class PostService {
     }
 
 
+    public PostEntity delete(String idStr) {
+        PostEntity post = findOne(idStr);
+        this.postRepository.delete(post);
+        return post;
+    }
 
 }

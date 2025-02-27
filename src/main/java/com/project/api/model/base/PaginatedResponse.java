@@ -15,6 +15,16 @@ public class PaginatedResponse<T> {
     private boolean isLastPage;
     private boolean isEmpty;
 
+    public PaginatedResponse(List<T> lists, int currentPage, int totalPages, long totalElements, boolean isFirstPage, boolean isLastPage, boolean isEmpty) {
+        this.lists = lists;
+        this.currentPage = currentPage;
+        this.totalPages = totalPages;
+        this.totalElements = totalElements;
+        this.isFirstPage = isFirstPage;
+        this.isLastPage = isLastPage;
+        this.isEmpty = isEmpty;
+    }
+
     public List<T> getLists() {
         return lists;
     }

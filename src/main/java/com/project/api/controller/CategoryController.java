@@ -48,9 +48,9 @@ public class CategoryController {
     }
 
 
-    @GetMapping()
-    public ResponseEntity<ApiResponse> findAll() {
-        List<CategoryResponse> responseList = categoryService.findAll()
+    @GetMapping("/{name}")
+    public ResponseEntity<ApiResponse> findAll(@RequestParam String name) {
+        List<CategoryResponse> responseList = categoryService.findByName(name)
                 .stream()
                 .map(CategoryResponse::fromCategoryEntity)
                 .toList();

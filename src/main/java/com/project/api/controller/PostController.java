@@ -8,25 +8,12 @@ import com.project.api.model.request.PostRequest;
 import com.project.api.model.response.PostResponse;
 import com.project.api.service.PostService;
 import jakarta.validation.Valid;
-import javafx.geometry.Pos;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/post")
@@ -39,7 +26,7 @@ public class PostController {
         this.postService = postService;
     }
 
-/*    @PostMapping("/create")
+    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(@Valid @RequestBody PostRequest request) throws Exception {
         PostEntity post = this.postService.create(request);
         PostResponse response = new PostResponse(
@@ -48,7 +35,7 @@ public class PostController {
                 post.getContent()
         );
         return ResponseEntity.ok(new ApiResponse("Post created successfully!", 200, response));
-    }*/
+    }
 
 /*    @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(
@@ -80,7 +67,7 @@ public class PostController {
         return ResponseEntity.ok(new ApiResponse("Post created successfully!", 200, response));
     }*/
 
-    @PostMapping("/create")
+  /*  @PostMapping("/create")
     public ResponseEntity<ApiResponse> create(
             @RequestParam("title") String title,
             @RequestParam(value = "content", required = false) String content,
@@ -127,7 +114,7 @@ public class PostController {
         );
 
         return ResponseEntity.ok(new ApiResponse("Post created successfully!", 200, response));
-    }
+    }*/
 
 
     @GetMapping("/{id}")
@@ -156,6 +143,17 @@ public class PostController {
         PostResponse response = PostResponse.fromEntity(post);
 
         return ResponseEntity.ok(new ApiResponse("Update successfully", 200, response));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ApiResponse> delete(@PathVariable("id") String idStr) {
+        PostEntity post = this.postService.delete(idStr);
+        PostResponse response = new PostResponse(
+                post.getId(),
+                post.getTitle(),
+                post.getContent()
+        );
+        return ResponseEntity.ok(new ApiResponse("delete", 200, response));
     }
 
 }
